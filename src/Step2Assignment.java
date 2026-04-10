@@ -2,94 +2,90 @@ import java.util.*;
 
 public class Step2Assignment {
 
-    // ======================= PROBLEM 5 =======================
+    // ======================= PROBLEM 6 =======================
 
-    // Linear Search (first occurrence)
-    public static int linearSearchFirst(String[] arr, String target) {
+    // Linear Search (unsorted)
+    public static void linearSearch(int[] arr, int target) {
         int comparisons = 0;
+        boolean found = false;
 
         for (int i = 0; i < arr.length; i++) {
             comparisons++;
-            if (arr[i].equals(target)) {
-                System.out.println("Linear First Occurrence Index: " + i);
-                System.out.println("Comparisons: " + comparisons);
-                return i;
+            if (arr[i] == target) {
+                System.out.println("Linear: Found at index " + i);
+                found = true;
+                break;
             }
         }
 
-        return -1;
-    }
-
-    // Linear Search (last occurrence)
-    public static int linearSearchLast(String[] arr, String target) {
-        int comparisons = 0;
-        int index = -1;
-
-        for (int i = 0; i < arr.length; i++) {
-            comparisons++;
-            if (arr[i].equals(target)) {
-                index = i;
-            }
+        if (!found) {
+            System.out.println("Linear: Not found");
         }
 
-        System.out.println("Linear Last Occurrence Index: " + index);
         System.out.println("Comparisons: " + comparisons);
-        return index;
     }
 
-    // Binary Search (any occurrence)
-    public static int binarySearch(String[] arr, String target) {
+    // Binary Search Floor & Ceiling
+    public static void binarySearchFloorCeil(int[] arr, int target) {
         int low = 0, high = arr.length - 1;
+        int floor = -1, ceil = -1;
         int comparisons = 0;
 
         while (low <= high) {
             comparisons++;
             int mid = (low + high) / 2;
 
-            if (arr[mid].equals(target)) {
-                System.out.println("Binary Search Found at Index: " + mid);
-                System.out.println("Comparisons: " + comparisons);
-                return mid;
-            } else if (arr[mid].compareTo(target) < 0) {
+            if (arr[mid] == target) {
+                floor = ceil = arr[mid];
+                break;
+            } else if (arr[mid] < target) {
+                floor = arr[mid];
                 low = mid + 1;
             } else {
+                ceil = arr[mid];
                 high = mid - 1;
             }
         }
 
-        return -1;
+        System.out.println("Binary Floor: " + floor);
+        System.out.println("Binary Ceiling: " + ceil);
+        System.out.println("Comparisons: " + comparisons);
     }
 
-    // Count occurrences (after binary search)
-    public static int countOccurrences(String[] arr, String target) {
-        int count = 0;
+    // Find insertion position (lower bound)
+    public static int findInsertionPoint(int[] arr, int target) {
+        int low = 0, high = arr.length;
 
-        for (String s : arr) {
-            if (s.equals(target)) count++;
+        while (low < high) {
+            int mid = (low + high) / 2;
+
+            if (arr[mid] < target) {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
         }
 
-        System.out.println("Total Occurrences: " + count);
-        return count;
+        return low;
     }
 
     public static void main(String[] args) {
 
-        System.out.println("===== Problem 5 =====");
+        System.out.println("===== Problem 6 =====");
 
-        String[] logs = {"accB", "accA", "accB", "accC"};
+        int[] unsorted = {50, 10, 100, 25};
+        int[] sorted = {10, 25, 50, 100};
 
-        // Linear Search
-        linearSearchFirst(logs, "accB");
-        linearSearchLast(logs, "accB");
+        int target = 30;
 
-        // Sort for Binary Search
-        Arrays.sort(logs);
-        System.out.println("Sorted Logs: " + Arrays.toString(logs));
+        // Linear Search (unsorted)
+        linearSearch(unsorted, target);
 
-        // Binary Search
-        binarySearch(logs, "accB");
+        // Binary Search Floor & Ceiling
+        binarySearchFloorCeil(sorted, target);
 
-        // Count occurrences
-        countOccurrences(logs, "accB");
+        // Insertion Point
+        int pos = findInsertionPoint(sorted, target);
+        System.out.println("Insertion Position: " + pos);
     }
 }
